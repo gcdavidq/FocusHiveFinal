@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Configuración base de Axios
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://focushivefinal.onrender.com';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://focushivefinal.onrender.com/api/v1';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
