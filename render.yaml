@@ -1,0 +1,58 @@
+# Blueprint de Render: crea la API (Python) y el sitio estático (React) desde este repositorio.
+# Uso: Render Dashboard → New → Blueprint → seleccionar este repo. Ver README.md, sección "Despliegue".
+#
+# Los nombres de servicio definen el subdominio *.onrender.com y deben ser únicos en Render.
+# Si cambias un nombre, actualiza también CORS_ORIGINS y VITE_API_URL más abajo.
+
+services:
+  # ---------------------------------------------------------------------------
+  # API FastAPI
+  # ---------------------------------------------------------------------------
+  - type: web
+    name: focushive-api
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.7
+      - key: DATABASE_URL
+        sync: false # se pega a mano en el dashboard: la URL de Neon (postgresql://...?sslmode=require)
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: "480"
+      - key: SEED_ON_STARTUP
+        value: "true"
+      - key: DEBUG
+        value: "false"
+      - key: CORS_ORIGINS
+        value: https://focushive-web.onrender.com
+
+  # ---------------------------------------------------------------------------
+  # Frontend React (sitio estático)
+  # ---------------------------------------------------------------------------
+  - type: web
+    name: focushive-web
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    autoDeploy: true
+    # La SPA maneja sus rutas: cualquier URL debe servir index.html
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_URL
+        value: https://focushive-api.onrender.com/api/v1
+      # Opcionales para el pie de página y la sección de contacto
+      # - key: VITE_REPO_URL
+      #   value: https://github.com/tu-usuario/focushive
+      # - key: VITE_CONTACT_EMAIL
+      #   value: tu@correo.com

@@ -1,0 +1,56 @@
+# Entorno local completo con un solo comando:  docker compose up --build
+#   API:       http://localhost:8000  (docs en /docs)
+#   Frontend:  http://localhost:5173
+#   Postgres:  localhost:5432 (usuario/clave: focushive / focushive)
+#
+# No requiere Neon: usa un PostgreSQL local. Para apuntar a Neon, exporta DATABASE_URL antes de levantar.
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: focushive
+      POSTGRES_PASSWORD: focushive
+      POSTGRES_DB: focushive
+    ports:
+      - "5432:5432"
+    volumes:
+      - focushive_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U focushive -d focushive"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build: ./backend
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-postgresql://focushive:focushive@db:5432/focushive}
+      SECRET_KEY: ${SECRET_KEY:-clave-local-solo-para-desarrollo}
+      CORS_ORIGINS: http://localhost:5173,http://localhost:4173
+      SEED_ON_STARTUP: "true"
+      DEBUG: "false"
+      PORT: "8000"
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  web:
+    image: node:22-alpine
+    working_dir: /app
+    command: sh -c "npm ci && npm run dev -- --host 0.0.0.0"
+    environment:
+      VITE_API_URL: http://localhost:8000/api/v1
+    volumes:
+      - ./frontend:/app
+      - focushive_node_modules:/app/node_modules
+    ports:
+      - "5173:5173"
+    depends_on:
+      - api
+
+volumes:
+  focushive_pgdata:
+  focushive_node_modules:

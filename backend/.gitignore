@@ -1,0 +1,12 @@
+# Entorno y secretos
+.env
+venv/
+.venv/
+
+# Python
+__pycache__/
+*.pyc
+
+# Artefactos ajenos al backend
+package-lock.json
+node_modules/
