@@ -45,7 +45,7 @@ La mayoría de estudiantes usa siempre la misma técnica, sin saber si es la que
 | | URL |
 |---|---|
 | 🌐 Aplicación | [Enlace]([https://neon.tech](https://focushive-web.onrender.com)) | [Neon](https://neon.tech)
-
+[Neon](https://neon.tech)
 <!-- Cuando tengas capturas, guárdalas en docs/screenshots/ y descomenta:
 <p align="center">
   <img src="docs/screenshots/dashboard.png" width="49%" alt="Dashboard de progreso"/>
