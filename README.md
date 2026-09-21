@@ -44,8 +44,8 @@ La mayoría de estudiantes usa siempre la misma técnica, sin saber si es la que
 
 | | URL |
 |---|---|
-| 🌐 Aplicación | *pendiente de publicar (sigue [DEPLOY.md](DEPLOY.md))* |
-| 📘 API interactiva (Swagger) | `https://<tu-api>.onrender.com/docs` |
+| 🌐 Aplicación | `https://focushive-web.onrender.com`|
+| 📘 API interactiva (Swagger) | `https://focushive-web.onrender.com` |
 | 💚 Salud del servicio | `https://<tu-api>.onrender.com/health` |
 
 <!-- Cuando tengas capturas, guárdalas en docs/screenshots/ y descomenta:
